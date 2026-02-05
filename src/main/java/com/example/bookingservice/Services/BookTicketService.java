@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.bookingservice.Entities.BookTicketDTO;
 import com.example.bookingservice.Entities.Seats;
@@ -31,7 +32,15 @@ public class BookTicketService {
 	@Autowired
 	private SeatsRepository seatsRepository;
 
+	@Transactional
 	public void bookTicket(BookTicketDTO bookTicketDTO) {
+//      we need to check wheater seats are already reserved or not
+//		for(int seatnumber:bookTicketDTO.getSeatNumbers()) {
+//			if(checkAvailability(bookTicketDTO.getShowid(),seatnumber)) {
+//				throw new AlreadyExistsException("the seat you selected is already reserved.");
+//			}
+//		}
+		
 		Ticket ticket=new Ticket();
 		ticket.setShowid(bookTicketDTO.getShowid());
 		ticket.setUsername("roopkumar");
@@ -40,15 +49,16 @@ public class BookTicketService {
 		ticket.setTotalprice(seatsCount*price);
 		
 		ticketRepository.save(ticket);
-		for(int seatnumber:bookTicketDTO.getSeatNumbers()) {
-			// we need to check wheater seats are already reserved or not
-			if(checkAvailability(ticket.getShowid(),seatnumber)) {
-				throw new AlreadyExistsException("the seat you selected is already reserved.");
+		try {
+			for(int seatnumber:bookTicketDTO.getSeatNumbers()) {
+				Seats seats=new Seats(); 
+				seats.setSeatnumber(seatnumber);
+				seats.setTicket(ticket);
+				seats.setShowid(bookTicketDTO.getShowid());
+				seatsRepository.save(seats);
 			}
-			Seats seats=new Seats(); 
-			seats.setSeatnumber(seatnumber);
-			seats.setTicket(ticket);
-			seatsRepository.save(seats);
+		}catch(Exception e){
+			throw new AlreadyExistsException("the seat you selected is already reserved.");
 		}
 		
 		
@@ -63,7 +73,7 @@ public class BookTicketService {
 	}
 	
 	public boolean checkAvailability(int showid, int seatnumber) {
-		Optional<Seats> avail = seatsRepository.findByTicket_ShowidAndSeatnumber(showid, seatnumber);
+		Optional<Seats> avail = seatsRepository.findByShowidAndSeatnumber(showid, seatnumber);
 		if(avail.isEmpty()) return false;
 		return true;
 	}

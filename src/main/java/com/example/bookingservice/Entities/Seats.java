@@ -22,29 +22,33 @@ public class Seats {
 	@JsonIgnore
 	private Ticket ticket;
 	
+	public Ticket getTicket() {
+		return ticket;
+	}
+	public void setTicket(Ticket ticket) {
+		this.ticket = ticket;
+	}
+	private int showid;
 	private int seatnumber;
 
 	public int getSeatsid() {
 		return seatsid;
 	}
-
 	public void setSeatsid(int seatsid) {
 		this.seatsid = seatsid;
 	}
-
-	public Ticket getTicket() {
-		return ticket;
-	}
-
-	public void setTicket(Ticket ticket) {
-		this.ticket = ticket;
-	}
-
+	
 	public int getSeatnumber() {
 		return seatnumber;
 	}
-
 	public void setSeatnumber(int seatnumber) {
 		this.seatnumber = seatnumber;
+	}
+	
+	public int getShowid() {
+		return showid;
+	}
+	public void setShowid(int showid) {
+		this.showid = showid;
 	}
 }

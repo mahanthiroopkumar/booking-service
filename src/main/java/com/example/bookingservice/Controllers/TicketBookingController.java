@@ -34,7 +34,6 @@ public class TicketBookingController {
 				.body(Map.of("message","Ticket Booked Successfully"));
 	}
 	
-// Demo for Testing:-
 	
 	@GetMapping("price/{showid}")
 	public ResponseEntity<Map<String,Object>> getPrice(@PathVariable("showid") int id){
@@ -44,6 +43,8 @@ public class TicketBookingController {
 				.body(Map.of("price",getprice.get("price")));
 	}
 
+	// Demo for Testing:-
+	
 	@GetMapping("getMessage")
 	public ResponseEntity<Map<String,Object>> getMessage(){
 		Map<String,Object> message = bookTicketService.getMessage();
@@ -53,9 +54,9 @@ public class TicketBookingController {
 	}
 	
 	@GetMapping("/seatAvailability/{showid}/{seatnumber}")
-	public ResponseEntity<Map<String,Object>> seatAvailability(@PathVariable("showid")int sohwid,
+	public ResponseEntity<Map<String,Object>> seatAvailability(@PathVariable("showid")int showid,
 			@PathVariable("seatnumber") int seatnumber){
-		boolean checkAvailability = bookTicketService.checkAvailability(sohwid, seatnumber);
+		boolean checkAvailability = bookTicketService.checkAvailability(showid, seatnumber);
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(Map.of("avail",checkAvailability));
